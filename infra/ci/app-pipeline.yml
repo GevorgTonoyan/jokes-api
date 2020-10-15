@@ -29,6 +29,20 @@ jobs:
       params:
         image: image/image.tar
 
+jobs:
+- name: build-and-push
+  plan: 
+    - get: source
+    - get: image
+      passed: 
+        - build-and-push
+      trigger: true
+    - task: run-flask
+      privileged: true
+      file: source/infra/ci/tasks/run-api.yml
+
+
+
 
 
 

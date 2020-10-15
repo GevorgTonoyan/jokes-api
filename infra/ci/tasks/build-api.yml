@@ -10,11 +10,11 @@ inputs:
   - name: source
 
 outputs:
-  - name: image
+  - gevi: jokesapi
 
 
 params:
-  CONTEXT: source/api/Dockerfile
+  CONTEXT: jokes-api
       
 run:
   path: build
