@@ -6,7 +6,7 @@ resources:
     uri: https://github.com/GevorgTonoyan/jokes-api
     branch: run-app
     private_key: ((key))
-   
+
 - name: image
   type: docker-image
   source:
@@ -39,9 +39,3 @@ jobs:
     - task: run-flask
       privileged: true
       file: source/infra/ci/tasks/run-api.yml
-
-
-
-
-
-

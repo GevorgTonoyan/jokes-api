@@ -11,7 +11,6 @@ resource "aws_key_pair" "ubuntu" {
   }
 }
 
-
 resource "aws_instance" "leonidas" {
   key_name      = var.key_name
   ami           = var.ami
@@ -46,7 +45,6 @@ resource "aws_instance" "leonidas" {
   # }
 }
 
-
 module "web_provisioner" {
   source = "./terraform-null-ansible"
 
@@ -55,4 +53,3 @@ module "web_provisioner" {
   playbook  = "./ansible/master.yml"
   dry_run   = false
 }
-
