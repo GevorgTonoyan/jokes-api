@@ -3,9 +3,10 @@ resources:
   type: git
   icon: github
   source:
-    uri: https://github.com/GevorgTonoyan/jokesapi
+    uri: https://github.com/GevorgTonoyan/jokes-api
     branch: develop
-    
+    private_key: ((key))
+   
 - name: image
   type: docker-image
   source:

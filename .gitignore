@@ -1,8 +1,5 @@
 #sensitive
 credentials.yml
-network.tf
-vars.yml
-credentials.yml
 
 #module
 *.zip

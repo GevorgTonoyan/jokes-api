@@ -1,0 +1,4 @@
+host: 18.157.145.127
+ansible_private_key_file: /home/gev/.ssh/ubuntu
+external: "http://18.157.145.127:8080"
+    
