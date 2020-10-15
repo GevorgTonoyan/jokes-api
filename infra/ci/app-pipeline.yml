@@ -23,7 +23,7 @@ jobs:
       trigger: true
     - task: build-image
       privileged: true
-      file: source/infra/ci/tasks/buildapi.yml
+      file: source/infra/ci/tasks/build-api.yml
       params:
         CONTEXT: concourse-examples/Dockerfiles/simple
     - put: image
