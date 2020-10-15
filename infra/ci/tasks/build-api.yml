@@ -10,7 +10,7 @@ inputs:
   - name: source
 
 outputs:
-  - gevi: jokesapi
+  - name: jokesapi
 
 
 params:
