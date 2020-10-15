@@ -1,0 +1,147 @@
+---
+- hosts: localhost
+  gather_facts: True
+  check_mode: no
+  vars_files:
+    - /mnt/c/Users/gev/Desktop/task/infra/ansible/vars.yml
+  tasks:
+  - name: Add public ip addresses to an dynamic inventory
+    add_host:
+       name: "{{ host }}"
+       groups: all
+
+  - local_action: wait_for port=22 host="{{ host }}" search_regex=OpenSSH delay=10
+ 
+- hosts: all
+  gather_facts: True
+  vars_files:
+    - /mnt/c/Users/gev/Desktop/task/infra/ansible/vars.yml
+  check_mode: no
+  become: true
+  tasks:
+    - name: Add public ip addresses to an dynamic inventory
+      add_host:
+        name: "{{ host }}"
+        groups: all
+
+    - name: Update and upgrade apt packages
+      become: true
+      apt:
+        update_cache: yes
+        cache_valid_time: 86400 #One day
+
+    - name: Install required system packages
+      apt: name={{ item }} state=latest update_cache=yes
+      loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+      
+    - name: Add Docker GPG apt Key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker Repository
+      apt_repository:
+        repo: deb https://download.docker.com/linux/ubuntu bionic stable
+        state: present
+  
+    - name: Install Docker Module for Python
+      pip:
+        name: docker
+
+    - name: Update apt and install docker-ce
+      apt: update_cache=yes name=docker-ce state=latest
+    # - name: run the service defined in my_project's docker-compose.yml
+    #   docker_compose:
+    #   project_src: /path/to/my_project
+
+
+    # - name: 
+    #   docker_container:
+    #     name: db
+    #     definition:
+    #       version: '3'
+    #       services:
+    #         concourse-db:
+    #           image: postgres
+    #           env:
+    #             POSTGRES_DB: concourse
+    #             POSTGRES_PASSWORD: concourse_pass
+    #             POSTGRES_USER: concourse_user
+    #             PGDATA: /database
+    #         concourse:
+    #           image: concourse/concourse
+    #           command: quickstart
+    #           depends_on: [concourse-db]
+    #           ports: 
+    #             - "8080:8080"
+    #           volumes:
+    #             - "/var/run/docker.sock:/var/run/docker.sock"  
+    #           env:
+    #             CONCOURSE_POSTGRES_HOST: concourse-db
+    #             CONCOURSE_POSTGRES_USER: concourse_user
+    #             CONCOURSE_POSTGRES_PASSWORD: concourse_pass
+    #             CONCOURSE_POSTGRES_DATABASE: concourse
+    #             CONCOURSE_EXTERNAL_URL: http://"{{ host }}":8080
+    #             CONCOURSE_ADD_LOCAL_USER: test:test
+    #             CONCOURSE_MAIN_TEAM_LOCAL_USER: test
+    #             CONCOURSE_WORKER_BAGGAGECLAIM_DRIVER: overlay
+    #             CONCOURSE_CLIENT_SECRET: Y29uY291cnNlLXdlYgo=
+    #             CONCOURSE_TSA_CLIENT_SECRET: Y29uY291cnNlLXdvcmtlcgo=
+    #     register: output
+
+
+    - name: Create a network with custom IPAM config
+      community.general.docker_network:
+        name: network_app
+        ipam_config:
+          - subnet: 172.28.0.0/16
+            gateway: 172.28.5.254
+            iprange: 172.28.5.0/24
+            aux_addresses:
+              host1: 172.28.1.5
+              host2: 172.28.1.6
+              host3: 172.28.1.7
+
+    - name: Run postgress
+      docker_container:
+        name: concourse-db
+        recreate: true
+        restart_policy: unless-stopped
+        privileged: yes
+        image: "postgres"
+        env: 
+          POSTGRES_DB: concourse
+          POSTGRES_PASSWORD: concourse_pass
+          POSTGRES_USER: concourse_user
+          PGDATA: /database
+        networks:
+          - name: network_app 
+
+    - name: Run concourse container
+      docker_container:
+        name: concourse
+        privileged: yes
+        recreate: true
+        restart_policy: unless-stopped
+        networks_cli_compatible: yes
+        image: "concourse/concourse"
+        command: quickstart
+        published_ports: 
+          - "8080:8080"
+        volumes: 
+          - "/var/run/docker.sock:/var/run/docker.sock"
+        env: 
+          CONCOURSE_POSTGRES_HOST: concourse-db
+          CONCOURSE_POSTGRES_USER: concourse_user
+          CONCOURSE_POSTGRES_PASSWORD: concourse_pass
+          CONCOURSE_POSTGRES_DATABASE: concourse
+          CONCOURSE_EXTERNAL_URL: "{{ external }}"
+          CONCOURSE_ADD_LOCAL_USER: test:test
+          CONCOURSE_MAIN_TEAM_LOCAL_USER: test
+          CONCOURSE_WORKER_BAGGAGECLAIM_DRIVER: overlay
+          CONCOURSE_CLIENT_SECRET: Y29uY291cnNlLXdlYgo=
+          CONCOURSE_TSA_CLIENT_SECRET: Y29uY291cnNlLXdvcmtlcgo=
+          CONCOURSE_X_FRAME_OPTIONS: deny
+
+        networks:
+          - name: network_app
