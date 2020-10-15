@@ -5,6 +5,7 @@ resources:
   source:
     uri: https://github.com/GevorgTonoyan/jokes-api
     branch: run-app
+    username: GevorgTonoyan
     private_key: ((key))
 
 - name: image
