@@ -4,7 +4,7 @@ resources:
   icon: github
   source:
     uri: https://github.com/GevorgTonoyan/jokes-api
-    branch: develop
+    branch: run-app
     private_key: ((key))
    
 - name: image
@@ -13,7 +13,7 @@ resources:
     username: ((dockerhub_user))
     password: ((dockerhub_password))
     tag: latest
-    repository: ((image-repo-name))/gevi
+    repository: ((image-repo-name))/jokesapi
 
 jobs:
 - name: build-and-push
@@ -29,8 +29,7 @@ jobs:
       params:
         image: image/image.tar
 
-jobs:
-- name: build-and-push
+- name: run-api
   plan: 
     - get: source
     - get: image
