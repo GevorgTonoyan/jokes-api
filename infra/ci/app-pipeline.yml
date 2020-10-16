@@ -1,3 +1,10 @@
+resource_types:
+- name: ecr-tag-resource
+  type: docker-image
+  source:
+    repository: petegoo/concourse-ecr-tag-resource
+    tag: latest
+
 resources:
 - name: ecr
   type: docker-image
@@ -13,16 +20,20 @@ resources:
     branch: run-app
     username: ((github-username))
     password: ((github-access-token))
+- name: ecr-tag
+  type: ecr-tag-resource
+  source:
+    repository: ((aws-repo))
 
 jobs:
 - name: release-and-deploy
   plan:
   - get: git-repo
     trigger: true
-  - put: ecr
+  - put: ecr-tag
     params:
       build: ./git-repo/api/
-      tag: latest
+      new_tag: latest
 
 # - name: run-api
 #   plan: 
