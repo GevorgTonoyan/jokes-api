@@ -1,5 +1,6 @@
 resources:
 - name: ecr
+  icon: AWS
   type: docker-image
   source:
     aws_access_key_id: ((aws-token))
@@ -7,6 +8,7 @@ resources:
     repository: ((aws-repo))
 
 - name: git-repo
+  icon: github
   type: git
   source:
     uri: https://github.com/GevorgTonoyan/jokes-api.git
@@ -16,7 +18,7 @@ resources:
 
 
 jobs:
-- name: release-and-deploy
+- name: build-and-push
   plan:
   - get: git-repo
     trigger: true 
@@ -26,14 +28,15 @@ jobs:
   - put: ecr
     params:
       build: ./git-repo
-      new_tag: latest
+      new_tag: $BUILD_NAME
 
-# - name: run-api
-#   plan: 
-#     passed: 
-#     - build-and-push
-#     - get: git-repo
-#       trigger: true
-#     - task: run-flask
-#       privileged: true
-#       file: git-repo/infra/ci/tasks/run-api.yml
+- name: pull-and-run
+  plan:
+  - get: ecr
+    trigger: true
+  - task: run-api
+    file: git-repo/infra/ci/tasks/run-api.yml
+    privileged: true
+
+
+

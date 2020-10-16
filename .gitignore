@@ -5,7 +5,8 @@ credentials.yml
 *.zip
 .build-harness
 build-harness
-
+ecs-params.yml
+docker-compose.yml
 # Local .terraform directories
 **/.terraform/*
 
