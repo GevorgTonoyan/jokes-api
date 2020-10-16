@@ -30,13 +30,13 @@ jobs:
       build: ./git-repo
       new_tag: $BUILD_NAME
 
-- name: pull-and-run
-  plan:
-  - get: ecr
-    trigger: true
-  - task: run-api
-    file: git-repo/infra/ci/tasks/run-api.yml
-    privileged: true
+# - name: pull-and-run
+#   plan:
+#   - get: ecr
+#     trigger: true
+#   - task: run-api
+#     file: git-repo/infra/ci/tasks/run-api.yml
+#     privileged: true
 
 
 
