@@ -7,15 +7,6 @@ resources:
     aws_secret_access_key: ((aws-secret))
     repository: ((aws-repo))
 
-- name: project-release
-  type: github-release
-  source: 
-    owner: ((github-username))
-    repository: https://github.com/GevorgTonoyan/jokes-api.git
-    access_token: ((github-access-token))
-    release: true
-    pre_release: true
-
 - name: git-repo
   icon: github
   type: git
@@ -34,10 +25,10 @@ jobs:
   - task: build
     file: git-repo/infra/ci/tasks/build-api.yml
     privileged: true
-  - put: ecr-docker-reg
+  - put: ecr
     params:
       build: ./git-repo
-      tag_file: ./project-release/tag
+      tag: $BUILD_NAME
 
 # - name: pull-and-run
 #   plan:
