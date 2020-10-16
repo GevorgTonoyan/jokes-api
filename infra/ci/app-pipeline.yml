@@ -9,7 +9,7 @@ resources:
 - name: git-repo
   type: git
   source:
-    uri: ((github-repo-uri)
+    uri: https://github.com/GevorgTonoyan/jokes-api.git
     branch: master
     username: ((github-username))
     password: ((github-access-token))
