@@ -8,14 +8,15 @@ image_resource:
 
 inputs:
   - name: source
-    path: api
+    path: ./api
 
 outputs:
   - name: jokesapi
 
 
 params:
-  DOCKERFILE: source/api/Dockerfile
+  CONTEXT:
+  DOCKERFILE:
       
 run:
   path: build

@@ -1,47 +1,35 @@
 resources:
-- name: source
-  type: git
-  icon: github
-  source:
-    uri: git@github.com:GevorgTonoyan/jokes-api.git
-    branch: run-app
-    username: GevorgTonoyan
-    private_key: ((key))
-
-- name: trusted-image
-  type: registry-image
-  source:
-    repository: https://hub.docker.com/repository/docker/gevi/myhub
-    username: ((dockerhub_user))
-    password: ((dockerhub_password))
-
-- name: image
+- name: ecr
   type: docker-image
   source:
-    username: ((dockerhub_user))
-    password: ((dockerhub_password))
-    tag: latest
-    repository: ((image-repo-name))/jokesapi
+    aws_access_key_id: ((aws-token))
+    aws_secret_access_key: ((aws-secret))
+    repository: ((aws-repo))
+
+- name: git-repo
+  type: git
+  source:
+    uri: ((github-repo-uri)
+    branch: master
+    username: ((github-username))
+    password: ((github-access-token))
 
 jobs:
-- name: build-and-push
-  plan: 
-    - get: source
-      trigger: true
-    - task: build-image
-      privileged: true
-      file: source/infra/ci/tasks/build-api.yml
-      params:
-        DOCKERFILE: source/api/Dockerfile
-    - put: image
-      params: {gevi:jokesapi/jokesapi.tar}
+- name: release-and-deploy
+  plan:
+  - get: git-repo
+    trigger: true
+  - put: ecr-docker-reg
+    params:
+      build: ./git-repo/api/
+      tag: latest
 
 # - name: run-api
 #   plan: 
 #     passed: 
 #     - build-and-push
-#     - get: source
+#     - get: git-repo
 #       trigger: true
 #     - task: run-flask
 #       privileged: true
-#       file: source/infra/ci/tasks/run-api.yml
+#       file: git-repo/infra/ci/tasks/run-api.yml
