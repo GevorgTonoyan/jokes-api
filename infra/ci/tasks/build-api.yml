@@ -7,8 +7,8 @@ image_resource:
     repository: vito/oci-build-task
 
 inputs:
-  - name: source
-    path: ./api
+  - name: git-repo
+    path: .
 
 outputs:
   - name: jokesapi
