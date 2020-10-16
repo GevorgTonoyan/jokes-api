@@ -19,7 +19,7 @@ jobs:
   plan:
   - get: git-repo
     trigger: true
-  - put: ecr-docker-reg
+  - put: ecr
     params:
       build: ./git-repo/api/
       tag: latest
