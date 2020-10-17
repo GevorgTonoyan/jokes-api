@@ -13,6 +13,10 @@ inputs:
 outputs:
   - name: jokesapi
 
+params:
+  CONTEXT:
+  DOCKERFILE:
+
 run:
   path: build
                 
