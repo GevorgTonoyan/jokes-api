@@ -10,8 +10,8 @@ app.config["DEBUG"] = False
 @app.route('/', methods=['GET'])
 def home():
     return '''<h1>I heard you like jokes</h1>
-<p>That's why I have prepared 100 jokes form bash.org.pl so you can enjoy your time</p>'''
-
+<p>That's why I have prepared 100 newest jokes form bash.org.pl</p>
+<p> If you want to get all you can visit IP address of this page and navigate to /api/v1/resources/jokes/all</p>'''
 
 @app.route('/api/v1/resources/jokes/all', methods=['GET'])
 def api_all():
