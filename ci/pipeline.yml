@@ -28,15 +28,15 @@ jobs:
   - put: ecr
     params:
       build: ./git-repo
-      tag: $BUILD_NAME
-
-# - name: pull-and-run
-#   plan:
-#   - get: ecr
-#     trigger: true
-#   - task: run-api
-#     file: git-repo/infra/ci/tasks/run-api.yml
-#     privileged: true
-
+      new_tag: latest
+      AWS_ACCESS_KEY_ID: ((aws-token))
+      AWS_SECRET_ACCESS_KEY: ((aws-secret))
+- name: pull-and-run
+  plan:
+  - get: ecr
+    trigger: true
+  - task: run-api
+    file: git-repo/infra/ci/tasks/run-api.yml
+    privileged: true
 
 
