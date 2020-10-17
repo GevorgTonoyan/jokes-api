@@ -23,7 +23,7 @@ jobs:
   - get: git-repo
     trigger: true 
   - task: build
-    file: git-repo/infra/ci/tasks/build-api.yml
+    file: git-repo/ci/tasks/build-api.yml
     privileged: true
   - put: ecr
     params:
@@ -38,7 +38,7 @@ jobs:
   - get: ecr
     trigger: true
   - task: run-api
-    file: git-repo/infra/ci/tasks/run-api.yml
+    file: git-repo/ci/tasks/run-api.yml
     privileged: true
 
 
