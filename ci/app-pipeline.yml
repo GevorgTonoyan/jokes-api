@@ -1,6 +1,6 @@
 resources:
 - name: ecr
-  icon: AWS
+  icon: amazon
   type: docker-image
   source:
     aws_access_key_id: ((aws-token))
