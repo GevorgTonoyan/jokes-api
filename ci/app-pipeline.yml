@@ -34,7 +34,7 @@ jobs:
 - name: pull-and-run
   plan:
   - get: git-repo
-    passed: build-and-push
+    passed: [build-and-push]
   - get: ecr
     trigger: true
   - task: run-api
