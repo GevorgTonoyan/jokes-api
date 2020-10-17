@@ -35,10 +35,7 @@ jobs:
   plan:
   - get: git-repo
     passed: [build-and-push]
-  - get: ecr
-    trigger: true
   - task: run-api
     file: git-repo/ci/tasks/run-api.yml
-    privileged: true
 
 
