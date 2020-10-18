@@ -1,6 +1,7 @@
-# -*- coding: utf8 -*-
 import re
 import requests
+
+#-*- coding: utf-8 -*-
 
 def get_jokes():
     
