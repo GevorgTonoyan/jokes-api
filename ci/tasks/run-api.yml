@@ -19,16 +19,16 @@ run:
   args: 
     - -c
     - |
-    set -euo pipefail
-    set -x
-    apk add curl
-    curl -Lo /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest
-    chmod +x /usr/local/bin/ecs-cli
-    echo "[default]" >> ~/.aws/credentials
-    echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials
-    echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials
-    echo "aws_session_token=${AWS_SESSION_TOKEN}" >> ~/.aws/credentials
-    echo "[default]" >> ~/.aws/config
-    echo "region=eu-west-1" >> ~/.aws/config
-    ecs-cli compose --project-name gevorg-api service down --cluster-config gevorg-api --ecs-profile gevorg-api-profile
-    aws ecs update-service --cluster gevorg-api --service gevorg-api --force-new-deployment
+      set -euo pipefail
+      set -x
+      apk add curl
+      curl -Lo /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest
+      chmod +x /usr/local/bin/ecs-cli
+      echo "[default]" >> ~/.aws/credentials
+      echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials
+      echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials
+      echo "aws_session_token=${AWS_SESSION_TOKEN}" >> ~/.aws/credentials
+      echo "[default]" >> ~/.aws/config
+      echo "region=eu-west-1" >> ~/.aws/config
+      ecs-cli compose --project-name gevorg-api service down --cluster-config gevorg-api --ecs-profile gevorg-api-profile
+      aws ecs update-service --cluster gevorg-api --service gevorg-api --force-new-deployment
