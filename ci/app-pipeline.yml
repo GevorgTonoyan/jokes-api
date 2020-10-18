@@ -40,5 +40,8 @@ jobs:
   - task: run-api
     file: git-repo/ci/tasks/run-api.yml
     privileged: true
+    params:
+      AWS_ACCESS_KEY_ID: ((aws-token))
+      AWS_SECRET_ACCESS_KEY: ((aws-secret))
 
 
