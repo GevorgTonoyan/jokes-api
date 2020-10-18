@@ -35,6 +35,7 @@ jobs:
 - name: pull-and-run
   plan:
   - get: git-repo
+    trigger: true
     passed: [build-and-push]
   - task: run-api
     file: git-repo/ci/tasks/run-api.yml
