@@ -14,7 +14,7 @@ This repository contains code that is responsible for deploying simple flask app
   warnings.
 - Mind the `var_files` in `master.yml` as it specifies where to find the variables for Ansible (created by `resource "local_file" "tf_ansible_vars_file_new"`)
 
-2. After terraform apply we will have a running Concourse CI instance on EC2 and Ansible will trigger to install docker, docker compose and run the Concourse CI.
+2. After terraform apply, terraform will deploy an EC2 instance with Elastic IP and then Ansible will trigger to install docker, docker compose and run the Concourse CI.
 
 - Please mind that Concourse containers are specified to bind to - "/var/run/docker.sock:/var/run/docker.sock" so they can be acessible from the EC2 host IP. 
 - Log into the Concourse CI under the **EC2_public_IP:8080**
