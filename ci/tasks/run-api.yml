@@ -1,0 +1,36 @@
+---
+platform: linux
+
+inputs:
+  - name: git-repo
+
+image_resource:
+  type: docker-image
+  source:
+    repository: hashicorp/terraform
+
+params: 
+  AWS_ACCESS_KEY_ID: ((aws-token))
+  AWS_SECRET_ACCESS_KEY: ((aws-secret))
+
+
+run:
+  path: sh
+  args: 
+    - -c
+    - |
+      set -euo pipefail
+      set -x
+      apk add curl aws-cli
+      curl -Lo /usr/local/bin/ecs-cli https://amazon-ecs-cli.s3.amazonaws.com/ecs-cli-linux-amd64-latest
+      chmod +x /usr/local/bin/ecs-cli
+      mkdir -p ~/.aws
+      echo "[default]" >> ~/.aws/credentials
+      echo "aws_access_key_id=${AWS_ACCESS_KEY_ID}" >> ~/.aws/credentials
+      echo "aws_secret_access_key=${AWS_SECRET_ACCESS_KEY}" >> ~/.aws/credentials
+      echo "[default]" >> ~/.aws/config
+      echo "region=eu-central-1" >> ~/.aws/config
+      ecs-cli configure profile --access-key $AWS_ACCESS_KEY_ID --secret-key $AWS_SECRET_ACCESS_KEY --profile-name gevorg-api-profile
+      echo 'update ecs with a new ecr image'
+      aws ecs update-service --cluster jokes-gev --service gev-project --force-new-deployment
+      sleep 120 

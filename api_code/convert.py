@@ -1,6 +1,8 @@
 import re
 import requests
 
+#-*- coding: utf-8 -*-
+
 def get_jokes():
     
     url = 'http://bash.org.pl/text'

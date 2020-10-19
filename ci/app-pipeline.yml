@@ -1,0 +1,47 @@
+resources:
+- name: ecr
+  icon: amazon
+  type: docker-image
+  source:
+    aws_access_key_id: ((aws-token))
+    aws_secret_access_key: ((aws-secret))
+    repository: ((aws-repo))
+
+- name: git-repo
+  icon: github
+  type: git
+  source:
+    uri: https://github.com/GevorgTonoyan/jokes-api.git
+    branch: run-app
+    username: ((github-username))
+    password: ((github-access-token))
+
+
+jobs:
+- name: build-and-push
+  plan:
+  - get: git-repo
+    trigger: true 
+  - task: build
+    file: git-repo/ci/tasks/build-api.yml
+    privileged: true
+  - put: ecr
+    params:
+      build: ./git-repo
+      new_tag: latest
+      AWS_ACCESS_KEY_ID: ((aws-token))
+      AWS_SECRET_ACCESS_KEY: ((aws-secret))
+
+- name: pull-and-run
+  plan:
+  - get: git-repo
+    trigger: true
+    passed: [build-and-push]
+  - task: run-api
+    file: git-repo/ci/tasks/run-api.yml
+    privileged: true
+    params:
+      AWS_ACCESS_KEY_ID: ((aws-token))
+      AWS_SECRET_ACCESS_KEY: ((aws-secret))
+
+

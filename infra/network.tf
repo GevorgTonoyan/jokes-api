@@ -55,14 +55,4 @@ resource "aws_eip" "leonidas_elastic" {
   }
 }
 
-# Export Terraform variable values to an Ansible var_file
-resource "local_file" "tf_ansible_vars_file_new" {
-  depends_on = [aws_eip.leonidas_elastic]
-  content    = <<-DOC
-    host: ${aws_eip.leonidas_elastic.public_ip}
-    ansible_private_key_file: /home/gev/.ssh/ubuntu
-    external: "http://${aws_eip.leonidas_elastic.public_ip}:8080"
-    
-    DOC
-  filename   = "./ansible/vars.yml"
-}
+
