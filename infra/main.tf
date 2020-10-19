@@ -28,21 +28,6 @@ resource "aws_instance" "leonidas" {
     volume_type = "gp2"
     volume_size = 30
   }
-
-  # provisioner "remote-exec" {
-  #   inline = ["echo 'Hello World'"]
-
-  #   connection {
-  #     type        = "ssh"
-  #     user        = "ubuntu"
-  #     private_key = file(var.private_key)
-  #     host        = self.public_ip
-  #   }
-  # }
-
-  # provisioner "local-exec" {
-  #   command = "ANSIBLE_HOST_KEY_CHECKING=False ansible-playbook -u ubuntu -i '${self.public_ip},' --private-key=/home/gev/.ssh/ubuntu master.yml"
-  # }
 }
 
 module "web_provisioner" {
@@ -52,4 +37,16 @@ module "web_provisioner" {
   envs      = ["host=${aws_eip.leonidas_elastic.public_ip}"]
   playbook  = "./ansible/master.yml"
   dry_run   = false
+}
+
+# Export Terraform variable values to an Ansible var_file
+resource "local_file" "tf_ansible_vars_file_new" {
+  depends_on = [aws_eip.leonidas_elastic]
+  content    = <<-DOC
+    host: ${aws_eip.leonidas_elastic.public_ip}
+    ansible_private_key_file: /home/gev/.ssh/ubuntu
+    external: "http://${aws_eip.leonidas_elastic.public_ip}:8080"
+    
+    DOC
+  filename   = "./ansible/vars.yml"
 }
