@@ -10,7 +10,7 @@ This repository contains code that is responsible for deploying simple flask app
 - The only manual input is required when Ansible ssh's to the EC2 - you will need to confirm the connection by manually typing yes. Totaling to 2 manual inputs - terraform apply   and then confirm known_hosts for SSH. 
 - Remember to specify `cidr_blocks = [""]` in network.tf as it will define which IP addresses can connect to the EC2 (ConcourseCI server) .
 - Remember to provide valid public and private key paths. 
-- For running Ansible and generating var file I have used # [cloudposse](https://github.com/cloudposse)/**[terraform-null-ansible](https://github.com/cloudposse/terraform-null-   ansible)** module. It has been cloned into the repo as a module and updated to work with terraform v13. It can be updated further since it still shows some depreciation    
+- For running Ansible and generating var file I have used [terraform-null-ansible](https://github.com/cloudposse/terraform-null-ansible) module. It has been cloned into the repo as a module and updated to work with terraform v13. It can be updated further since it still shows some depreciation    
   warnings.
 - Mind the `var_files` in `master.yml` as it specifies where to find the variables for Ansible (created by `resource "local_file" "tf_ansible_vars_file_new"`)
 
