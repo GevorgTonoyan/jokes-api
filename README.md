@@ -1,8 +1,9 @@
-  
-
+                                                        Please do not use for production!
 # Introduction
 
 This repository contains code that is responsible for deploying simple flask application in ECS. Deployment starts with provisioning an AWS infrastructure (EC2), running Ansible to install the required packages and dependencies. Starting a ConcourseCI to build and push Dockerimage containing the flask app to Amazon ECR repository and then updating the ECS service with a new image. 
+
+
 
 
 # Deployment
